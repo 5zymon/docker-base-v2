@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+
+  nginx:
+    volumes:
+      - code:/opt/app
+  php:
+    volumes:
+      - code:/opt/app
+
+volumes:
+  code:
+
+x-mutagen:
+  sync:
+    defaults:
+      mode: "two-way-resolved"
+      symlink:
+        mode: "ignore"
+      ignore:
+        vcs: true
+      permissions:
+        defaultFileMode: 644
+        defaultDirectoryMode: 755
+      configurationBeta:
+        permissions:
+          defaultOwner: "id:33" # www-data
+          defaultGroup: "id:33" # www-data
+   myprojectcode:
+      ignore:
+        paths:
+          - "*.idea*"
+      alpha: "../image/app/"
+      beta: "volume://code"

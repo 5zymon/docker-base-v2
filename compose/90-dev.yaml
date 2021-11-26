@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+
+  nginx:
+    volumes:
+      - ../image/app/public:/opt/app/public
+
+  php:
+    build:
+      context: ../image
+      target: php_builder
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../image/app:/opt/app
+

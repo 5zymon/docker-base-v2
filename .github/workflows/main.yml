@@ -1,0 +1,39 @@
+name: Test Code
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to PR branch
+        uses: actions/checkout@v2
+
+      - name: Install Taskfile
+        run: |
+          curl -sL https://taskfile.dev/install.sh | sh -s -- -b /usr/local/bin
+          task --version
+
+      - name: Build images
+        run: |
+          cp .env.ci .env
+          task docker:build
+
+      - name: Start Containers
+        run: |
+          task docker:start
+
+      - name: Install dependencies
+        run: |
+          task install
+
+      - name: ECS Check
+        run: task ecs
+
+      - name: PHPUnit
+        run: task phpunit
+
+      - name: PHPStan
+        run: task phpstan

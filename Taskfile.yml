@@ -1,0 +1,65 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - docker-compose exec php bash
+    silent: true
+
+  install:
+    desc: "Install dependencies"
+    cmds:
+      - docker-compose exec -T php composer install
+
+  migrations:
+    desc: "Run migrations"
+    cmds:
+      - docker-compose exec -T php bin/console d:m:m -y
+
+  docker:build:
+    desc: "Build images"
+    cmds:
+      - docker-compose build
+
+  docker:start:
+    desc: "Start containers"
+    cmds:
+      - docker-compose up -d
+
+  docker:stop:
+    desc: "Stop containers"
+    cmds:
+    - docker-compose stop
+
+  docker:down:
+    desc: "Stop and destroy containers"
+    cmds:
+    - docker-compose down
+
+  docker:logs:
+    desc: "Display containers logs"
+    cmds:
+      - docker-compose logs --timestamps --tail 25 --follow
+
+  phpunit:
+    desc: "Run PHPUnit tests"
+    cmds:
+      - docker-compose up -d php
+      - docker-compose run --rm php sh -c "[ -f ./tests/tools/phpunit/vendor/bin/phpunit ] || composer install -d ./tests/tools/phpunit --no-dev && ./tests/tools/phpunit/vendor/bin/phpunit"
+
+  ecs:
+    desc: "Run ECS check"
+    cmds:
+      - docker-compose run --rm php sh -c "[ -f ./tests/tools/ecs/vendor/bin/ecs ] || composer install -d ./tests/tools/ecs --no-dev && ./tests/tools/ecs/vendor/bin/ecs  check src --config ecs.php"
+
+  ecs:fix:
+    desc: "Run ECS Fix"
+    cmds:
+      - docker-compose run --rm php sh -c "[ -f ./tests/tools/ecs/vendor/bin/ecs ] || composer install -d ./tests/tools/ecs --no-dev && ./tests/tools/ecs/vendor/bin/ecs  check src --config ecs.php --fix"
+
+  phpstan:
+    desc: "Run PHPStan"
+    cmds:
+      - docker-compose run --rm php sh -c "[ -f ./tests/tools/phpstan/vendor/bin/phpstan ] || composer install -d ./tests/tools/phpstan --no-dev && ./tests/tools/phpstan/vendor/bin/phpstan analyse -c phpstan.neon -l 7 src"

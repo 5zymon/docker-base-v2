@@ -1,0 +1,7 @@
+includes:
+    - ./tests/tools/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
+    - ./tests/tools/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
+parameters:
+    inferPrivatePropertyTypeFromConstructor: true
+    excludePaths:
+        - ./vendor
