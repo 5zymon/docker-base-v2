@@ -4,7 +4,7 @@ WORKDIR /opt/app
 COPY ./app/public /opt/app/public
 
 FROM php:fpm-buster as php_builder
-ENV APP_ENV=prod
+
 # Extension & Configuration
 RUN apt-get update && \
     apt-get install -y \
@@ -21,9 +21,7 @@ COPY ./etc/php-fpm/php.ini /usr/local/etc/php/conf.d/99-overrides.ini.template
 COPY ./etc/php-fpm/www.conf /usr/local/etc/php-fpm.d/www.conf.template
 # Composer install
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN set -eux; \
-  composer global require "symfony/flex" --prefer-dist --no-progress --classmap-authoritative; \
- composer clear-cache
+
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 RUN mkdir /opt/app/
 RUN mkdir /var/www/.composer

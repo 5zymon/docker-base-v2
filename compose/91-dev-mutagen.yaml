@@ -1,7 +1,6 @@
 version: "3.7"
 
 services:
-
   nginx:
     volumes:
       - code:/opt/app
@@ -21,13 +20,13 @@ x-mutagen:
       ignore:
         vcs: true
       permissions:
-        defaultFileMode: 644
-        defaultDirectoryMode: 755
+        defaultFileMode: 0666
+        defaultDirectoryMode: 0777
       configurationBeta:
         permissions:
           defaultOwner: "id:33" # www-data
           defaultGroup: "id:33" # www-data
-   myprojectcode:
+    myprojectcode:
       ignore:
         paths:
           - "*.idea*"
